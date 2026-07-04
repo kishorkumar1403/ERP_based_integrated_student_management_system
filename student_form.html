@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if student else 'Add' }} Student — Campus ERP{% endblock %}
+{% block page_title %}{{ 'Edit' if student else 'Add New' }} Student{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-grid">
+      {% if not student %}
+      <div class="field">
+        <label>Roll Number</label>
+        <input type="text" name="roll_number" required placeholder="e.g. CSE2026001">
+      </div>
+      {% endif %}
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" name="first_name" required value="{{ student.first_name if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Last Name</label>
+        <input type="text" name="last_name" required value="{{ student.last_name if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" name="dob" value="{{ student.dob if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <select name="gender">
+          <option {{ 'selected' if student and student.gender=='Male' }}>Male</option>
+          <option {{ 'selected' if student and student.gender=='Female' }}>Female</option>
+          <option {{ 'selected' if student and student.gender=='Other' }}>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ student.phone if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Class</label>
+        <select name="class_id">
+          <option value="">— Unassigned —</option>
+          {% for c in classes %}
+          <option value="{{ c.class_id }}" {{ 'selected' if student and student.class_id==c.class_id }}>{{ c.class_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field full">
+        <label>Address</label>
+        <input type="text" name="address" value="{{ student.address if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Guardian Name</label>
+        <input type="text" name="guardian_name" value="{{ student.guardian_name if student else '' }}">
+      </div>
+      <div class="field">
+        <label>Guardian Phone</label>
+        <input type="text" name="guardian_phone" value="{{ student.guardian_phone if student else '' }}">
+      </div>
+      {% if not student %}
+      <div class="field full">
+        <label>Photo (optional)</label>
+        <input type="file" name="photo" accept="image/*">
+      </div>
+      {% endif %}
+    </div>
+    <div style="margin-top:20px;">
+      <button type="submit" class="btn btn-primary">{{ 'Save Changes' if student else 'Add Student' }}</button>
+      <a href="{{ url_for('students_list') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

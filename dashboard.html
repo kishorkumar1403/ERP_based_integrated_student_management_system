@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Campus ERP{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="num">{{ stats.total_students }}</div>
+    <div class="label">Active Students</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{{ stats.total_teachers }}</div>
+    <div class="label">Teachers</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{{ stats.total_classes }}</div>
+    <div class="label">Classes</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">₹{{ "{:,.0f}".format(stats.fees_collected) }}</div>
+    <div class="label">Fees Collected</div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h2>Recent Notices</h2>
+  </div>
+  {% if notices %}
+    <table class="ledger">
+      <thead><tr><th>Title</th><th>Posted</th></tr></thead>
+      <tbody>
+      {% for n in notices %}
+        <tr>
+          <td><strong>{{ n.title }}</strong><br><span style="color:var(--muted); font-size:13px;">{{ n.content }}</span></td>
+          <td class="mono">{{ n.posted_on }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="color:var(--muted);">No notices posted yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
