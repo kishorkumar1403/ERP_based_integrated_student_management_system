@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Fees — Campus ERP{% endblock %}
+{% block page_title %}Fee Payments{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <div class="panel-head"><h2>Record a Payment</h2></div>
+  <form method="POST" action="{{ url_for('add_payment') }}" class="form-grid">
+    <div class="field">
+      <label>Student</label>
+      <select name="student_id" required>
+        {% for s in students %}
+        <option value="{{ s.student_id }}">{{ s.roll_number }} — {{ s.first_name }} {{ s.last_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Amount Paid (₹)</label>
+      <input type="number" step="0.01" name="amount_paid" required>
+    </div>
+    <div class="field">
+      <label>Payment Mode</label>
+      <select name="payment_mode">
+        <option value="online">Online</option>
+        <option value="cash">Cash</option>
+        <option value="card">Card</option>
+        <option value="cheque">Cheque</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Remarks</label>
+      <input type="text" name="remarks" placeholder="e.g. Semester 3 fees">
+    </div>
+    <div class="full">
+      <button type="submit" class="btn btn-brass">Record Payment</button>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h2>Payment History</h2></div>
+  <table class="ledger">
+    <thead><tr><th>Roll No.</th><th>Student</th><th>Amount</th><th>Mode</th><th>Date</th><th>Remarks</th></tr></thead>
+    <tbody>
+      {% for p in payments %}
+      <tr>
+        <td class="mono">{{ p.roll_number }}</td>
+        <td>{{ p.first_name }} {{ p.last_name }}</td>
+        <td>₹{{ "{:,.2f}".format(p.amount_paid) }}</td>
+        <td>{{ p.payment_mode }}</td>
+        <td class="mono">{{ p.payment_date }}</td>
+        <td>{{ p.remarks or '—' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center; color:var(--muted);">No payments recorded yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

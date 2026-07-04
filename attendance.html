@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Attendance — Campus ERP{% endblock %}
+{% block page_title %}Attendance{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <form method="GET" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+    <div class="field" style="margin:0;">
+      <label>Class</label>
+      <select name="class_id" onchange="this.form.submit()">
+        <option value="">Select class</option>
+        {% for c in classes %}
+        <option value="{{ c.class_id }}" {{ 'selected' if class_id|string == c.class_id|string }}>{{ c.class_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field" style="margin:0;">
+      <label>Subject</label>
+      <select name="subject_id" onchange="this.form.submit()">
+        <option value="">Select subject</option>
+        {% for s in subjects %}
+        <option value="{{ s.subject_id }}" {{ 'selected' if subject_id|string == s.subject_id|string }}>{{ s.subject_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field" style="margin:0;">
+      <label>Date</label>
+      <input type="date" name="date" value="{{ att_date }}" onchange="this.form.submit()">
+    </div>
+  </form>
+</div>
+
+{% if roster and subject_id %}
+<div class="panel">
+  <form method="POST">
+    <input type="hidden" name="class_id" value="{{ class_id }}">
+    <input type="hidden" name="subject_id" value="{{ subject_id }}">
+    <input type="hidden" name="date" value="{{ att_date }}">
+    <table class="ledger">
+      <thead><tr><th>Roll No.</th><th>Name</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for s in roster %}
+        <tr class="status-row">
+          <td class="mono">{{ s.roll_number }}</td>
+          <td>{{ s.first_name }} {{ s.last_name }}
+            <input type="hidden" name="student_id" value="{{ s.student_id }}">
+          </td>
+          <td>
+            <select name="status_{{ s.student_id }}">
+              <option value="present">Present</option>
+              <option value="absent">Absent</option>
+              <option value="late">Late</option>
+            </select>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div style="margin-top:16px;">
+      <button type="submit" class="btn btn-primary">Save Attendance</button>
+    </div>
+  </form>
+</div>
+{% elif class_id %}
+<p style="color:var(--muted);">Select a subject to mark attendance for this class.</p>
+{% endif %}
+{% endblock %}
